@@ -12,6 +12,7 @@ class SubView {
         this._name = options.name;
         this._type = options.type;
         this._solver = options.solver;
+        this._priority = options.priority ? options.priority : 0;
         this._attr = {};
         if (!options.name) {
             if (process.env.CASSOWARYJS) {
@@ -90,6 +91,19 @@ class SubView {
     }
 
     /**
+     * Content hugging priority. View with grater priority will more like to exapand as compared to less priority.
+     * @readonly
+     * @value {Number}
+     */
+    set priority(value) {
+        this._priority = value;
+    }
+
+    get priority() {
+        return this._priority;
+    }
+
+    /**
      * Intrinsic width of the sub-view.
      *
      * Use this property to explicitely set the width of the sub-view, e.g.:
@@ -111,10 +125,10 @@ class SubView {
             const attr = this._getAttr(Attribute.WIDTH);
             if (this._intrinsicWidth === undefined) {
                 if (process.env.CASSOWARYJS) {
-                    this._solver.addEditVar(attr, new c.Strength('required', this._name ? 998 : 999, 1000, 1000));
+                    this._solver.addEditVar(attr, new c.Strength('required', this._name ? this._priority : 999, 1000, 1000));
                 }
                 else {
-                    this._solver.addEditVariable(attr, kiwi.Strength.create(this._name ? 998 : 999, 1000, 1000));
+                    this._solver.addEditVariable(attr, kiwi.Strength.create(this._name ? this._priority : 999, 1000, 1000));
                 }
             }
             this._intrinsicWidth = value;
@@ -143,10 +157,10 @@ class SubView {
             const attr = this._getAttr(Attribute.HEIGHT);
             if (this._intrinsicHeight === undefined) {
                 if (process.env.CASSOWARYJS) {
-                    this._solver.addEditVar(attr, new c.Strength('required', this._name ? 998 : 999, 1000, 1000));
+                    this._solver.addEditVar(attr, new c.Strength('required', this._name ? this._priority : 999, 1000, 1000));
                 }
                 else {
-                    this._solver.addEditVariable(attr, kiwi.Strength.create(this._name ? 998 : 999, 1000, 1000));
+                    this._solver.addEditVariable(attr, kiwi.Strength.create(this._name ? this._priority : 999, 1000, 1000));
                 }
             }
             this._intrinsicHeight = value;
